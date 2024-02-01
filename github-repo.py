@@ -1,30 +1,30 @@
 import subprocess
 
+def run_command(command) -> None:
+    try:
+        result = subprocess.run(command, shell=True, capture_output=True, text=True, check=True)
+        print(result.stdout)
+    except subprocess.CalledProcessError as e:
+        print(f"Error executing command: {e}")
+        print(e.stderr)
 
-def run_command(command):
-    return subprocess.run(command, shell=True, capture_output=True, text=True)
-
-while True:
-    print("Welcome to github configuration!")
-    
+def get_user_input(prompt: str) -> str:
     while True:
-        email: str = input("Enter your email: ")
-        print(f"The email you entered is: {email}")
-        answer_email: str = input(" Is it correct? (y/n)\n")
-        if (answer_email == "y" or answer_email == "Y"):
-            run_command(f"git config user.email '{email}'")
-            break
-        else: 
-            continue
-    
+        user_input = input(prompt)
+        confirmation = input(f"You entered: {user_input}. Is it correct? (y/n)\n")
+        if confirmation.lower() == 'y':
+            return user_input
 
-    while True:
-        username: str = input("Enter your username: ")
-        print(f"The username you entered is {username}")
-        answer_username: str = input("Is it correct? (y/n)\n")
-        if (answer_username == "y" or answer_username == "Y"):
-            run_command(f"git config user.name '{username}'")
-            break
-        else:
-            continue
-    break
+def configure_git() -> None:
+    print("Welcome to GitHub configuration!")
+
+    email = get_user_input("Enter your email: ")
+    run_command(f"git config user.email '{email}'")
+
+    username = get_user_input("Enter your username: ")
+    run_command(f"git config user.name '{username}'")
+
+    print("Git configuration completed successfully.")
+
+if __name__ == "__main__":
+    configure_git()
